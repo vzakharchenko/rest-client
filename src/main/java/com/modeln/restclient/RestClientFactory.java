@@ -2,6 +2,7 @@
 
 package com.modeln.restclient;
 
+import org.apache.commons.collections.MapUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -30,17 +31,17 @@ public class RestClientFactory<T> {
     }
 
 
-    public RestClientFactory<T> addErrorHandler(ResponseErrorHandler errorHandler){
+    public RestClientFactory<T> addErrorHandler(ResponseErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
         return this;
     }
 
-    public RestClientFactory<T> addHeader(String headerName, String headerValue){
-        headers.add(headerName,headerValue);
+    public RestClientFactory<T> addHeader(String headerName, String headerValue) {
+        headers.add(headerName, headerValue);
         return this;
     }
 
-    public RestClientFactory<T> setAuthentication(Authentication authentication){
+    public RestClientFactory<T> setAuthentication(Authentication authentication) {
         this.authentication = authentication;
         return this;
     }
@@ -64,8 +65,16 @@ public class RestClientFactory<T> {
     private final class DefaultAuthentication implements Authentication {
 
         @Override
-        public MultiValueMap<String, String> enrichHeaders(MultiValueMap<String, String> headers) {
-            return headers;
+        public MultiValueMap<String, String> enrichHeaders(MultiValueMap<String, String> headerMap) {
+
+            if (headerMap == null) {
+                return headers;
+            }
+
+            if (MapUtils.isNotEmpty(headers)) {
+                headerMap.putAll(headers);
+            }
+            return headerMap;
         }
     }
 }
