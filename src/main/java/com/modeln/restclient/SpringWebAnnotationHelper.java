@@ -1,9 +1,11 @@
 package com.modeln.restclient;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -52,13 +54,13 @@ public class SpringWebAnnotationHelper {
         info.setUriVariableParameters(getParametersWithAnnotation(method, PathVariable.class));
         info.setQueryParameters(getParametersWithAnnotation(method, RequestParam.class));
         String[] produced = methodMapping.produces();
-        if (produced != null) {
+        if (ArrayUtils.isNotEmpty(produced)) {
             info.getHttpHeaders().put(ACCEPT, Arrays.asList(produced));
         }
 
-        String[] value = methodMapping.consumes();
-        if (value != null) {
-            info.getHttpHeaders().put(CONTENT_TYPE, Arrays.asList(value));
+        String[] consumes = methodMapping.consumes();
+        if (ArrayUtils.isNotEmpty(consumes)) {
+            info.getHttpHeaders().put(CONTENT_TYPE, Arrays.asList(consumes));
         }
         return info;
     }
