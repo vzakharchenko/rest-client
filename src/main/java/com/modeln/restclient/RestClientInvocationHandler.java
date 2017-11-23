@@ -47,7 +47,9 @@ class RestClientInvocationHandler implements InvocationHandler {
         this.wsClientInterface = wsClientInterface;
         this.baseUrl = baseUrl;
         this.authentication = authentication;
-        restTemplate.setErrorHandler(errorHandler);
+        if (errorHandler!=null){
+            restTemplate.setErrorHandler(errorHandler);
+        }
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory() {
             @Override
             protected HttpUriRequest createHttpUriRequest(HttpMethod httpMethod, URI uri) {
